@@ -8,14 +8,16 @@
  */
 
 describe("UIIntegrationTest", function () { // TODO: Rename to Piwik?
-    this.timeout(0);
+    this.timeout(600000);
 
     var generalParams = 'idSite=1&period=year&date=2012-08-09',
         idSite2Params = 'idSite=2&period=year&date=2012-08-09',
         evolutionParams = 'idSite=1&period=day&date=2012-01-31&evolution_day_last_n=30',
         urlBase = 'module=CoreHome&action=index&' + generalParams,
         widgetizeParams = "module=Widgetize&action=iframe",
-        segment = encodeURIComponent("browserCode==FF") // from OmniFixture
+        segment = encodeURIComponent("browserCode==FF"), // from OmniFixture
+        realtimeMapQueryParams = "&showDateTime=0&realtimeWindow=last2&changeVisitAlpha=0&enableAnimation=0&doNotRefreshVisits=1"
+            + "&removeOldVisits=0"
         ;
 
     before(function (done) {
@@ -62,10 +64,17 @@ describe("UIIntegrationTest", function () { // TODO: Rename to Piwik?
     });
 
     it.only("should load dashboard3 correctly", function (done) {
-        this.retries(3);
         expect.screenshot("dashboard3").to.be.captureSelector('.pageWrap', function (page) {
             page.load("?" + urlBase + "#?" + generalParams + "&category=Dashboard_Dashboard&subcategory=3");
-            //page.wait(200);
+            page.wait(200);
+            page.evaluate(function () {
+                var elem = $('h3')[0];
+                if (elem) {
+                    console.log(window.getComputedStyle(elem, null).getPropertyValue('font-family'));
+                } else {
+                    console.log('nope');
+                }
+            });
         }, done);
     });
 
@@ -159,8 +168,7 @@ describe("UIIntegrationTest", function () { // TODO: Rename to Piwik?
     it('should load the visitors > real-time map page correctly', function (done) {
         expect.screenshot('visitors_realtime_map').to.be.captureSelector('.pageWrap', function (page) {
             page.load("?" + urlBase + "#?" + idSite2Params + "&category=General_Visitors&subcategory=UserCountryMap_RealTimeMap"
-                    + "&showDateTime=0&realtimeWindow=last2&changeVisitAlpha=0&enableAnimation=0&doNotRefreshVisits=1"
-                    + "&removeOldVisits=0");
+                    + realtimeMapQueryParams);
             page.mouseMove('circle');
             page.evaluate(function(){
                 $('.ui-tooltip:visible .rel-time').data('actiontime', Math.floor(new Date((new Date()).getTime()-(4*3600*24000))/1000));
