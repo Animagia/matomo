@@ -78,8 +78,8 @@ before_script:
   # make tmpfs and run MySQL on it for reasonnable performance
   - ./tests/travis/setup_mysql_tmpfs.sh
 
+  - sudo apt-get remove ttf-bitstream-vera
   - ./tests/travis/prepare.sh
-  - fc-match sans-serif
   - ./tests/travis/setup_webserver.sh
   - ./tests/travis/install_phantomjs.sh; export PATH=$PWD/travis_phantomjs/phantomjs-2.1.1-linux-x86_64/bin:$PATH;
 
