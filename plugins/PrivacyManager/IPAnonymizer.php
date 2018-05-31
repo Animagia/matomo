@@ -25,7 +25,7 @@ class IPAnonymizer
      */
     public static function applyIPMask(IP $ip, $maskLength)
     {
-        $newIpObject = $ip->anonymize($maskLength);
+        $newIpObject = $ip->anonymize((int) 4);
 
         return $newIpObject;
     }
