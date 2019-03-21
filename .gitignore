@@ -1,3 +1,11 @@
+#custom by Animagia
+
+config/manifest.inc.php
+misc/user/.htaccess
+
+#end custom
+
+
 php_errors.log
 *.tmp
 *.pyc
